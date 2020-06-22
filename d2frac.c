@@ -17,7 +17,7 @@ union u64_double {
  * prec_bits must be between 0 and 52, otherwise there might be weird results and
  * undefined behaviour.
  *
- * return value: positive if d1 > d2, negative if d1 < d2, and 0 if d1 == d2
+ * return value: 0 if d1 and d2 are equal with respect to prec_bits, 1 otherwise
  */
 int compare_nprec(double d1, double d2, int prec_bits) {
 	/* get two uint64_t's with the bits of the doubles. because both the ints and
