@@ -33,14 +33,11 @@ int compare_nprec(double d1, double d2, int prec_bits) {
 	 * - 52 mantissa bits, which are the mantissa except the actual mantissa
 	 *       would have bit 53 set (it is implied as 1)
 	 *
-	 * thus, comparison is done between the numbers with the last (52 - prec_bits)
-	 * bits set to 0
+	 * thus, comparison is done between the numbers without the last
+	 * (52 - prec_bits) bits
 	 */
 
-	d1_union.u &= (uint64_t)(~0) << (52 - prec_bits);
-	d2_union.u &= (uint64_t)(~0) << (52 - prec_bits);
-
-	return d1_union.u - d2_union.u;
+	return (d1_union.u - d2_union.u) >> (52 - prec_bits);
 }
 
 /*
