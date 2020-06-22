@@ -26,15 +26,20 @@ unsigned int gcd(unsigned int u, unsigned int v) {
     return u << shift;
 }
 
-int main() {
+int main(int argc, char** argv) {
 	struct timespec current_time;
 	long long unsigned int start_usec;
 	long long unsigned int end_usec;
 
 	int ret;
 
-	uint16_t random_buf[1024];
-	int random_buf_size = sizeof(random_buf);
+	int num_tests;
+	if (argc < 2 || (num_tests = atoi(argv[1])) == 0) {
+		num_tests = 512;
+	}
+
+	uint16_t random_buf[num_tests * 2];
+	int random_buf_size = num_tests * 2 * 2;
 
 	ret = clock_gettime(CLOCK_REALTIME, &current_time);
 	if (ret == 0) {
@@ -50,9 +55,7 @@ int main() {
 		return 1;
 	}
 
-	for (long unsigned int i = 0;
-			i < (random_buf_size / sizeof(*random_buf)) / 2; i++)
-	{
+	for (int i = 0; i < num_tests; i++) {
 		struct fraction_t frac;
 		unsigned short num = random_buf[i * 2];
 		unsigned short den = random_buf[i * 2 + 1];
@@ -83,9 +86,8 @@ int main() {
 	if (ret == 0 && start_usec != 0) {
 		long long unsigned int diff_usec = end_usec - start_usec;
 
-		printf("Went through %zu tests in %llu.%06llu seconds\n",
-				random_buf_size / sizeof(*random_buf) / 2, diff_usec / 1000000,
-				diff_usec % 1000000);
+		printf("Went through %d tests in %llu.%06llu seconds\n",
+				num_tests, diff_usec / 1000000, diff_usec % 1000000);
 	}
 
 	return 0;
